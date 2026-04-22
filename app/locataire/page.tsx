@@ -2,12 +2,13 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import dynamic from "next/dynamic"
 import { Search, SlidersHorizontal, Heart, Star, MapPin, Users, Bed, ChevronLeft, ChevronRight, X, Map } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import{ Header } from "@/components/header"
+import {Header} from "@/components/header"
 
 // Dynamically import the map component to avoid SSR issues with Leaflet
 const PropertyMap = dynamic(() => import("@/components/property-map"), { 
