@@ -8,7 +8,7 @@ import { Search, SlidersHorizontal, Heart, Star, MapPin, Users, Bed, ChevronLeft
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import {Header} from "@/components/header"
+import { Header } from "@/components/header"
 
 // Dynamically import the map component to avoid SSR issues with Leaflet
 const PropertyMap = dynamic(() => import("@/components/property-map"), { 
@@ -123,7 +123,8 @@ function PropertyCard({ property, onFavorite, isFavorite }: {
   const [currentImage, setCurrentImage] = useState(0)
 
   return (
-    <div className="group relative">
+    <Link href={`/property/${property.id}`}>
+      <div className="group relative cursor-pointer">
       {/* Image Container */}
       <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
         <Image
@@ -184,7 +185,8 @@ function PropertyCard({ property, onFavorite, isFavorite }: {
           {property.price} TND <span className="font-normal text-muted-foreground">/ nuit</span>
         </p>
       </div>
-    </div>
+      </div>
+    </Link>
   )
 }
 

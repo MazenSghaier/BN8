@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { Home, User, MessageCircleQuestion, X, ChevronDown } from "lucide-react"
+import { MessageCircleQuestion, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   Accordion,
@@ -35,24 +34,6 @@ export function FloatingButtons() {
 
   return (
     <>
-      {/* Right side floating buttons */}
-      <div className="fixed bottom-8 right-8 z-40 flex flex-col gap-3">
-        <Link
-          href="/proprietaire"
-          className="group flex items-center gap-3 rounded-full bg-primary px-5 py-3 text-primary-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-        >
-          <Home className="h-5 w-5" />
-          <span className="text-sm font-medium">Propriétaire</span>
-        </Link>
-        <Link
-          href="/locataire"
-          className="group flex items-center gap-3 rounded-full bg-card border border-border px-5 py-3 text-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl hover:border-accent"
-        >
-          <User className="h-5 w-5" />
-          <span className="text-sm font-medium">Locataire</span>
-        </Link>
-      </div>
-
       {/* Left side FAQ button */}
       <button
         onClick={() => setIsFaqOpen(true)}

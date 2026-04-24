@@ -2,23 +2,12 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Sparkles, MapPin, Calendar, Users, Search } from "lucide-react"
+import { ArrowRight, MapPin, Home } from "lucide-react"
 import Link from "next/link"
-
-const suggestions = [
-  "Villa avec piscine à Hammamet",
-  "Appartement à Tunis centre",
-  "Maison vue mer à Sousse",
-  "Dar traditionnel à Sidi Bou Said",
-  "Studio à La Marsa",
-]
 
 export function HeroSection() {
   const [scrollY, setScrollY] = useState(0)
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
-  const [searchValue, setSearchValue] = useState("")
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const [isThinking, setIsThinking] = useState(false)
+  const [showChoices, setShowChoices] = useState(false)
   const [mounted, setMounted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -28,25 +17,6 @@ export function HeroSection() {
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  useEffect(() => {
-    if (isSearchFocused && searchValue.length > 0) {
-      setIsThinking(true)
-      setShowSuggestions(false)
-      const timer = setTimeout(() => {
-        setIsThinking(false)
-        setShowSuggestions(true)
-      }, 800)
-      return () => clearTimeout(timer)
-    } else if (!isSearchFocused) {
-      setShowSuggestions(false)
-      setIsThinking(false)
-    }
-  }, [searchValue, isSearchFocused])
-
-  const filteredSuggestions = suggestions.filter(s =>
-    s.toLowerCase().includes(searchValue.toLowerCase())
-  )
 
   const parallaxOffset = scrollY * 0.5
 
@@ -75,136 +45,135 @@ export function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
-        {/* Animated heading */}
+        {/* Main Hero Text */}
         <h1 
           className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight text-balance ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`}
         >
-          Trouvez votre séjour idéal en Tunisie
+          Trouvez votre séjour idéal
+          <br />
+          ou confiez-nous votre bien
         </h1>
         
         <p 
           className={`mt-6 text-lg sm:text-xl text-white/90 max-w-2xl mx-auto text-pretty ${mounted ? 'animate-fade-in-up animation-delay-200' : 'opacity-0'}`}
         >
-          Des logements uniques pour des expériences inoubliables
+          Des logements uniques et un service de gestion complet
         </p>
 
-        {/* AI Search Bar */}
-        <div 
-          className={`mt-10 ${mounted ? 'animate-fade-in-up animation-delay-400' : 'opacity-0'}`}
-        >
-          <div 
-            className={`relative max-w-3xl mx-auto transition-all duration-500 ${
-              isSearchFocused ? 'scale-105' : ''
-            }`}
-          >
-            {/* AI Label */}
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-sm text-white/80 font-medium">Recherche intelligente</span>
-            </div>
-
-            {/* Search Container - Glassmorphism */}
-            <div 
-              className={`glass-dark rounded-full p-2 transition-all duration-300 ${
-                isSearchFocused ? 'ring-2 ring-accent/50 shadow-2xl' : 'shadow-xl'
-              }`}
+        {/* Single CTA Button - Shows initially */}
+        {!showChoices && (
+          <div className={`mt-10 transition-all duration-500 ${mounted ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+            <Button
+              onClick={() => setShowChoices(true)}
+              size="lg"
+              className="bg-accent text-secondary hover:bg-accent/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 animate-glow"
             >
-              <div className="flex items-center gap-2">
-                {/* Destination Input */}
-                <div className="flex-1 flex items-center gap-3 px-4 py-3">
-                  <MapPin className="h-5 w-5 text-accent shrink-0" />
-                  <input
-                    type="text"
-                    placeholder="Où allez-vous ?"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                    className="w-full bg-transparent text-white placeholder:text-white/60 focus:outline-none text-sm sm:text-base"
-                  />
+              Que voulez-vous faire ?
+              <ArrowRight className="ml-3 h-5 w-5" />
+            </Button>
+          </div>
+        )}
+
+        {/* Choice Cards - Revealed on button click */}
+        {showChoices && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto mt-10">
+            {/* Tenant Card */}
+            <Link
+              href="/locataire"
+              className="group animate-fade-in-up"
+            >
+              <div className="relative overflow-hidden rounded-3xl bg-white/95 backdrop-blur-sm p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 text-left h-full">
+                {/* Background icon */}
+                <div className="absolute top-0 right-0 opacity-5 -mr-8 -mt-8">
+                  <MapPin className="h-40 w-40" />
                 </div>
 
-                {/* Divider */}
-                <div className="hidden sm:block h-8 w-px bg-white/20" />
-
-                {/* Date */}
-                <div className="hidden sm:flex items-center gap-3 px-4 py-3">
-                  <Calendar className="h-5 w-5 text-white/60" />
-                  <span className="text-white/60 text-sm">Quand ?</span>
-                </div>
-
-                {/* Divider */}
-                <div className="hidden md:block h-8 w-px bg-white/20" />
-
-                {/* Guests */}
-                <div className="hidden md:flex items-center gap-3 px-4 py-3">
-                  <Users className="h-5 w-5 text-white/60" />
-                  <span className="text-white/60 text-sm">Invités</span>
-                </div>
-
-                {/* Search Button */}
-                <Button
-                  size="lg"
-                  className="rounded-full bg-accent text-secondary hover:bg-accent/90 px-4 sm:px-6 h-12 shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95"
-                >
-                  <Search className="h-5 w-5" />
-                  <span className="hidden sm:inline ml-2">Rechercher</span>
-                </Button>
-              </div>
-            </div>
-
-            {/* AI Suggestions Dropdown */}
-            {isSearchFocused && searchValue.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-3 glass-dark rounded-2xl overflow-hidden shadow-2xl z-50">
-                {isThinking ? (
-                  <div className="px-6 py-4 flex items-center gap-3">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-accent rounded-full thinking-dot" />
-                      <div className="w-2 h-2 bg-accent rounded-full thinking-dot" />
-                      <div className="w-2 h-2 bg-accent rounded-full thinking-dot" />
-                    </div>
-                    <span className="text-white/60 text-sm">Recherche en cours...</span>
+                <div className="relative z-10">
+                  <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent/30 transition-colors">
+                    <MapPin className="h-7 w-7 text-accent" />
                   </div>
-                ) : showSuggestions && filteredSuggestions.length > 0 ? (
-                  <div className="py-2">
-                    {filteredSuggestions.map((suggestion, index) => (
-                      <button
-                        key={suggestion}
-                        className="w-full px-6 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                        onClick={() => setSearchValue(suggestion)}
-                      >
-                        <MapPin className="h-4 w-4 text-accent" />
-                        <span>{suggestion}</span>
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
+
+                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                    Je cherche un logement
+                  </h2>
+
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start gap-3 text-foreground/70">
+                      <span className="text-accent font-bold mt-1">✓</span>
+                      <span>Large choix de logements</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-foreground/70">
+                      <span className="text-accent font-bold mt-1">✓</span>
+                      <span>Réservation sécurisée</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-foreground/70">
+                      <span className="text-accent font-bold mt-1">✓</span>
+                      <span>Prix transparents</span>
+                    </li>
+                  </ul>
+
+                  <Button className="w-full bg-accent text-secondary hover:bg-accent/90 rounded-full py-2.5 font-semibold group-hover:shadow-lg transition-all">
+                    Explorer les logements
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            )}
+            </Link>
+
+            {/* Owner Card */}
+            <Link
+              href="/proprietaire"
+              className="group animate-fade-in-up animation-delay-200"
+            >
+              <div className="relative overflow-hidden rounded-3xl bg-secondary/95 backdrop-blur-sm p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 text-left h-full">
+                {/* Background icon */}
+                <div className="absolute top-0 right-0 opacity-5 -mr-8 -mt-8">
+                  <Home className="h-40 w-40" />
+                </div>
+
+                <div className="relative z-10">
+                  <div className="w-14 h-14 bg-accent/30 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent/40 transition-colors">
+                    <Home className="h-7 w-7 text-accent" />
+                  </div>
+
+                  <h2 className="text-2xl md:text-3xl font-bold text-secondary-foreground mb-4">
+                    Je suis propriétaire
+                  </h2>
+
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start gap-3 text-secondary-foreground/80">
+                      <span className="font-bold mt-1">✓</span>
+                      <span>Gestion complète A à Z</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-secondary-foreground/80">
+                      <span className="font-bold mt-1">✓</span>
+                      <span>Optimisation des revenus</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-secondary-foreground/80">
+                      <span className="font-bold mt-1">✓</span>
+                      <span>Accompagnement personnalisé</span>
+                    </li>
+                  </ul>
+
+                  <Button className="w-full bg-accent text-secondary hover:bg-accent/90 rounded-full py-2.5 font-semibold group-hover:shadow-lg transition-all">
+                    Confier mon bien
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Scroll indicator - Only show if choices not revealed */}
+      {!showChoices && (
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="h-12 w-6 rounded-full border-2 border-white/50 flex items-start justify-center p-1">
+            <div className="h-2 w-1 rounded-full bg-white/70 animate-pulse" />
           </div>
         </div>
-
-        {/* CTA Button */}
-        <div className={`mt-8 ${mounted ? 'animate-fade-in-up animation-delay-600' : 'opacity-0'}`}>
-          <Link href="/locataire">
-            <Button
-              size="lg"
-              className="bg-accent text-secondary hover:bg-accent/90 rounded-full px-8 py-6 text-base font-medium shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 animate-glow"
-            >
-              Explorer les logements
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="h-12 w-6 rounded-full border-2 border-white/50 flex items-start justify-center p-1">
-          <div className="h-2 w-1 rounded-full bg-white/70 animate-pulse" />
-        </div>
-      </div>
+      )}
     </section>
   )
 }
