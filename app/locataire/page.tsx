@@ -8,7 +8,7 @@ import { Search, SlidersHorizontal, Heart, Star, MapPin, Users, Bed, ChevronLeft
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { Header } from "@/components/header"
+import { ListingHeader } from "@/components/listing-header"
 
 // Dynamically import the map component to avoid SSR issues with Leaflet
 const PropertyMap = dynamic(() => import("@/components/property-map"), { 
@@ -193,8 +193,6 @@ function PropertyCard({ property, onFavorite, isFavorite }: {
 export default function LocatairePage() {
   const [showMap, setShowMap] = useState(false)
   const [favorites, setFavorites] = useState<number[]>([])
-  const [destination, setDestination] = useState("")
-  const [showFilters, setShowFilters] = useState(false)
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev => 
@@ -204,102 +202,8 @@ export default function LocatairePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <ListingHeader />
       
-      {/* Search Bar */}
-      <div className="sticky top-0 z-40 border-b border-border bg-card shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 py-4">
-          <div className="flex items-center gap-3">
-            {/* Search Fields */}
-            <div className="flex flex-1 items-center gap-1 rounded-full border border-border bg-card p-1 shadow-sm">
-              {/* Destination */}
-              <div className="flex-1 px-4 py-2">
-                <label className="block text-xs font-semibold text-secondary">Destination ?</label>
-                <Input
-                  type="text"
-                  placeholder="Où allez-vous ?"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="h-auto border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground focus-visible:ring-0"
-                />
-              </div>
-
-              <div className="h-8 w-px bg-border" />
-
-              {/* Arrival Date */}
-              <div className="hidden flex-1 px-4 py-2 md:block">
-                <label className="block text-xs font-semibold text-secondary">Arrivée ?</label>
-                <Input
-                  type="text"
-                  placeholder="Quand ?"
-                  className="h-auto border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground focus-visible:ring-0"
-                />
-              </div>
-
-              <div className="hidden h-8 w-px bg-border md:block" />
-
-              {/* Departure Date */}
-              <div className="hidden flex-1 px-4 py-2 md:block">
-                <label className="block text-xs font-semibold text-secondary">Départ ?</label>
-                <Input
-                  type="text"
-                  placeholder="Quand ?"
-                  className="h-auto border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground focus-visible:ring-0"
-                />
-              </div>
-
-              <div className="hidden h-8 w-px bg-border md:block" />
-
-              {/* Guests */}
-              <div className="hidden flex-1 px-4 py-2 lg:block">
-                <label className="block text-xs font-semibold text-secondary">Invités</label>
-                <Input
-                  type="text"
-                  placeholder="Combien d'invités ?"
-                  className="h-auto border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground focus-visible:ring-0"
-                />
-              </div>
-
-              {/* Search Button */}
-              <Button size="icon" className="h-12 w-12 shrink-0 rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Filters Button */}
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setShowFilters(!showFilters)}
-              className="h-12 w-12 shrink-0 rounded-full border-border"
-            >
-              <SlidersHorizontal className="h-5 w-5" />
-            </Button>
-          </div>
-
-          {/* Expanded Filters */}
-          {showFilters && (
-            <div className="mt-4 grid grid-cols-2 gap-4 rounded-xl border border-border bg-card p-4 md:grid-cols-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-secondary">Prix min</label>
-                <Input type="number" placeholder="0 TND" className="bg-background" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-secondary">Prix max</label>
-                <Input type="number" placeholder="1000 TND" className="bg-background" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-secondary">Chambres</label>
-                <Input type="number" placeholder="1+" className="bg-background" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-secondary">Type</label>
-                <Input type="text" placeholder="Appartement, Villa..." className="bg-background" />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="relative">

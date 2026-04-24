@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, use } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Heart, Star, MapPin, Users, Bed, Bath, Wifi, Wind, UtensilsCrossed, Eye, Waves, Zap, Tv, Home as HomeIcon, Lock, ChevronLeft, ChevronRight, Share2, Flag, Phone } from "lucide-react"
 import { cn } from "@/lib/utils"
-import {Header} from "@/components/header"
+import { ListingHeader } from "@/components/listing-header"
 import dynamic from "next/dynamic"
 
 const PropertyMapDetail = dynamic(() => import("@/components/property-map-detail"), { 
@@ -140,14 +140,14 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
 
   if (isExpanded) {
     return (
-      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+      <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
         <button
           onClick={() => setIsExpanded(false)}
-          className="absolute top-4 left-4 text-white hover:bg-white/10 p-2 rounded-full"
+          className="absolute top-6 left-6 z-50 text-white hover:bg-white/10 p-2 rounded-full transition-colors cursor-pointer"
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-8 w-8" />
         </button>
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="relative w-[80%] h-[80%] flex items-center justify-center">
           <Image
             src={images[currentIndex]}
             alt={title}
@@ -156,17 +156,17 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
           />
           <button
             onClick={goToPrevious}
-            className="absolute left-4 text-white hover:bg-white/10 p-2 rounded-full"
+            className="absolute -left-16 z-50 text-white hover:bg-white/10 p-2 rounded-full cursor-pointer"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-8 w-8" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-4 text-white hover:bg-white/10 p-2 rounded-full"
+            className="absolute -right-16 z-50 text-white hover:bg-white/10 p-2 rounded-full cursor-pointer"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-8 w-8" />
           </button>
-          <div className="absolute bottom-4 text-white text-sm">
+          <div className="absolute -bottom-10 text-white text-sm">
             {currentIndex + 1} / {images.length}
           </div>
         </div>
@@ -186,18 +186,20 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
         <button
           onClick={(e) => {
             e.preventDefault()
+            e.stopPropagation()
             goToPrevious()
           }}
-          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all"
+          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all z-10"
         >
           <ChevronLeft className="h-5 w-5 text-secondary" />
         </button>
         <button
           onClick={(e) => {
             e.preventDefault()
+            e.stopPropagation()
             goToNext()
           }}
-          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all z-10"
         >
           <ChevronRight className="h-5 w-5 text-secondary" />
         </button>
@@ -229,8 +231,8 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
   )
 }
 
-export default function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+export default function PropertyDetailsPage({ params }: { params: { id: string } }) {
+  const { id } = params
   const property = properties[parseInt(id)]
   const [isFavorite, setIsFavorite] = useState(false)
   const [selectedDates, setSelectedDates] = useState({ arrival: "", departure: "" })
@@ -252,7 +254,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <ListingHeader />
 
       <div className="mx-auto max-w-7xl px-4 py-8">
         {/* Header with title and actions */}
@@ -339,7 +341,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                 <p className="text-sm text-muted-foreground mb-4">
                   Situé dans un quartier calme et résidentiel, à 5 minutes de la plage et proche de toutes les commodités.
                 </p>
-                <div className="h-[400px] rounded-xl overflow-hidden bg-muted">
+                <div className="relative z-0 h-[400px] rounded-xl overflow-hidden bg-muted">
                   <PropertyMapDetail coordinates={property.mapCoordinates} title={property.title} />
                 </div>
                 <Link href="#" className="mt-4 font-semibold text-primary hover:underline inline-flex items-center gap-1">

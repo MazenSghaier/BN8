@@ -17,7 +17,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer id="contact" className="bg-primary text-primary-foreground">
+    <footer id="contact" className="bg-primary text-black">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
@@ -28,7 +28,7 @@ export function Footer() {
               </div>
               <span className="text-xl font-semibold">TuniStay</span>
             </div>
-            <p className="text-primary-foreground/70 text-sm leading-relaxed">
+            <p className="text-black/80 text-sm leading-relaxed">
               La première plateforme de réservation de logements dédiée à la Tunisie. 
               Découvrez des propriétés uniques pour des séjours inoubliables.
             </p>
@@ -44,7 +44,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-primary-foreground/70 hover:text-accent transition-colors text-sm"
+                    className="text-black/80 hover:text-black transition-colors text-sm font-medium"
                   >
                     {link.label}
                   </Link>
@@ -59,15 +59,15 @@ export function Footer() {
               Contact
             </h4>
             <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-sm text-primary-foreground/70">
+              <li className="flex items-center gap-3 text-sm text-black/80 font-medium">
                 <Mail className="h-4 w-4 shrink-0" />
                 <span>contact@tunistay.tn</span>
               </li>
-              <li className="flex items-center gap-3 text-sm text-primary-foreground/70">
+              <li className="flex items-center gap-3 text-sm text-black/80 font-medium">
                 <Phone className="h-4 w-4 shrink-0" />
                 <span>+216 71 123 456</span>
               </li>
-              <li className="flex items-start gap-3 text-sm text-primary-foreground/70">
+              <li className="flex items-start gap-3 text-sm text-black/80 font-medium">
                 <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
                 <span>Rue du Lac, Les Berges du Lac, Tunis, Tunisie</span>
               </li>
@@ -85,7 +85,7 @@ export function Footer() {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground/10 hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-black/10 hover:bg-black hover:text-primary transition-colors"
                 >
                   <social.icon className="h-5 w-5" />
                 </a>
@@ -95,8 +95,8 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-primary-foreground/10">
-          <p className="text-center text-sm text-primary-foreground/50">
+        <div className="mt-12 pt-8 border-t border-black/10">
+          <p className="text-center text-sm font-medium text-black/70">
             © {new Date().getFullYear()} TuniStay. Tous droits réservés.
           </p>
         </div>
