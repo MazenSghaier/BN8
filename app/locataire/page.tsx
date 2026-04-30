@@ -193,6 +193,8 @@ function PropertyCard({ property, onFavorite, isFavorite }: {
 export default function LocatairePage() {
   const [showMap, setShowMap] = useState(false)
   const [favorites, setFavorites] = useState<number[]>([])
+  const [destination, setDestination] = useState("")
+  const [showFilters, setShowFilters] = useState(false)
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev => 
@@ -203,7 +205,6 @@ export default function LocatairePage() {
   return (
     <div className="min-h-screen bg-background">
       <ListingHeader />
-      
 
       {/* Main Content */}
       <div className="relative">

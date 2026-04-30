@@ -5,7 +5,7 @@
 
 :root {
   /* Brand colors: #E8E3D5 (cream), #000000 (black), #FFFFFF (white), #B5A642 (gold) */
-  --background: #E8E3D5; /* Primary cream/beige */
+  --background: #FFFFFF; /* White */
   --foreground: #000000; /* Black text */
   --card: #FFFFFF; /* White */
   --card-foreground: #000000;

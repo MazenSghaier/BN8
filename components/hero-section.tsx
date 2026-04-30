@@ -2,14 +2,18 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, MapPin, Home } from "lucide-react"
+import { ArrowRight, MapPin, Home, ChevronRight } from "lucide-react"
 import Link from "next/link"
 
 export function HeroSection() {
   const [scrollY, setScrollY] = useState(0)
-  const [showChoices, setShowChoices] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [activeImageTenantIdx, setActiveImageTenantIdx] = useState(0)
+  const [activeImageOwnerIdx, setActiveImageOwnerIdx] = useState(0)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  const tenantImages = ["/images/property-2.jpg", "/images/property-3.jpg", "/images/property-1.jpg"]
+  const ownerImages = ["/images/proprietaire-video.jpg", "/images/property-4.jpg", "/images/property-5.jpg"]
 
   useEffect(() => {
     setMounted(true)
@@ -17,6 +21,41 @@ export function HeroSection() {
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const tenantIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const ownerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const handleTenantMouseEnter = () => {
+    if (!tenantIntervalRef.current) {
+      tenantIntervalRef.current = setInterval(() => {
+        setActiveImageTenantIdx(prev => (prev + 1) % tenantImages.length)
+      }, 1500)
+    }
+  }
+
+  const handleTenantMouseLeave = () => {
+    if (tenantIntervalRef.current) {
+      clearInterval(tenantIntervalRef.current)
+      tenantIntervalRef.current = null
+    }
+    setActiveImageTenantIdx(0)
+  }
+
+  const handleOwnerMouseEnter = () => {
+    if (!ownerIntervalRef.current) {
+      ownerIntervalRef.current = setInterval(() => {
+        setActiveImageOwnerIdx(prev => (prev + 1) % ownerImages.length)
+      }, 1500)
+    }
+  }
+
+  const handleOwnerMouseLeave = () => {
+    if (ownerIntervalRef.current) {
+      clearInterval(ownerIntervalRef.current)
+      ownerIntervalRef.current = null
+    }
+    setActiveImageOwnerIdx(0)
+  }
 
   const parallaxOffset = scrollY * 0.5
 
@@ -44,78 +83,87 @@ export function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
+      <div className="relative z-10 mx-auto w-full px-4 md:px-8 xl:px-16 text-center">
         {/* Main Hero Text */}
+        <div className={`mb-4 flex justify-center ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`}>
+          <span className="px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-sm font-semibold uppercase tracking-wider backdrop-blur-sm">
+            LOCATION COURTE DURÉE EN TUNISIE
+          </span>
+        </div>
+
         <h1 
-          className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight text-balance ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`}
+          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`}
         >
-          Trouvez votre séjour idéal
-          <br />
-          ou confiez-nous votre bien
+          Trouvez votre séjour idéal<br />ou confiez-nous votre bien
         </h1>
         
         <p 
-          className={`mt-6 text-lg sm:text-xl text-white/90 max-w-2xl mx-auto text-pretty ${mounted ? 'animate-fade-in-up animation-delay-200' : 'opacity-0'}`}
+          className={`mt-4 text-base sm:text-lg text-gray-300 max-w-3xl mx-auto text-pretty ${mounted ? 'animate-fade-in-up animation-delay-200' : 'opacity-0'}`}
         >
-          Des logements uniques et un service de gestion complet
+          Des logements uniques pour des expériences inoubliables
+          <br className="hidden md:block" />
+          et un service de gestion complet pour les propriétaires.
         </p>
 
-        {/* Single CTA Button - Shows initially */}
-        {!showChoices && (
-          <div className={`mt-10 transition-all duration-500 ${mounted ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
-            <Button
-              onClick={() => setShowChoices(true)}
-              size="lg"
-              className="bg-accent text-secondary hover:bg-accent/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 animate-glow"
-            >
-              Que voulez-vous faire ?
-              <ArrowRight className="ml-3 h-5 w-5" />
-            </Button>
-          </div>
-        )}
-
-        {/* Choice Cards - Revealed on button click */}
-        {showChoices && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto mt-10">
+        {/* Choice Cards - Always visible */}
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-[60rem] mx-auto mt-16 ${mounted ? 'animate-fade-in-up animation-delay-400' : 'opacity-0'}`}>
             {/* Tenant Card */}
             <Link
               href="/locataire"
-              className="group animate-fade-in-up"
+              className="group h-full"
+              onMouseEnter={handleTenantMouseEnter}
+              onMouseLeave={handleTenantMouseLeave}
             >
-              <div className="relative overflow-hidden rounded-3xl bg-white/95 backdrop-blur-sm p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 text-left h-full">
-                {/* Background icon */}
-                <div className="absolute top-0 right-0 opacity-5 -mr-8 -mt-8">
-                  <MapPin className="h-40 w-40" />
-                </div>
+              <div className="relative overflow-hidden rounded-3xl h-full flex shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                {/* Left side - White background with text */}
+                <div className="flex-1 bg-white p-6 flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center mb-4">
+                      <MapPin className="h-5 w-5 text-accent" />
+                    </div>
 
-                <div className="relative z-10">
-                  <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent/30 transition-colors">
-                    <MapPin className="h-7 w-7 text-accent" />
+                    <h2 className="text-xl font-bold text-foreground mb-2">
+                      Je cherche
+                      <br />
+                      un logement
+                    </h2>
+
+                    <p className="text-foreground/70 text-sm mb-4">
+                      Trouvez et réservez le logement parfait pour votre séjour.
+                    </p>
+
+                    <ul className="space-y-1.5 mb-5">
+                      <li className="flex items-center gap-2 text-foreground/80">
+                        <MapPin className="h-4 w-4 text-accent" />
+                        <span className="text-sm">Large choix de logements</span>
+                      </li>
+                      <li className="flex items-center gap-2 text-foreground/80">
+                        <MapPin className="h-4 w-4 text-accent" />
+                        <span className="text-sm">Réservation sécurisée</span>
+                      </li>
+                      <li className="flex items-center gap-2 text-foreground/80">
+                        <MapPin className="h-4 w-4 text-accent" />
+                        <span className="text-sm">Prix transparents</span>
+                      </li>
+                    </ul>
                   </div>
 
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                    Je cherche un logement
-                  </h2>
-
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="text-accent font-bold mt-1">✓</span>
-                      <span>Large choix de logements</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="text-accent font-bold mt-1">✓</span>
-                      <span>Réservation sécurisée</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="text-accent font-bold mt-1">✓</span>
-                      <span>Prix transparents</span>
-                    </li>
-                  </ul>
-
                   <Button className="w-full bg-accent text-secondary hover:bg-accent/90 rounded-full py-2.5 font-semibold group-hover:shadow-lg transition-all">
-                    Explorer les logements
+                    Rechercher un logement
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
+                </div>
+
+                {/* Right side - Image carousel */}
+                <div className="w-1/3 relative overflow-hidden">
+                  <div
+                    className="h-full w-full bg-cover bg-center transition-all duration-700 ease-out"
+                    style={{
+                      backgroundImage: `url('${tenantImages[activeImageTenantIdx]}')`,
+                    }}
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent to-white/10" />
                 </div>
               </div>
             </Link>
@@ -123,49 +171,65 @@ export function HeroSection() {
             {/* Owner Card */}
             <Link
               href="/proprietaire"
-              className="group animate-fade-in-up animation-delay-200"
+              className="group h-full"
+              onMouseEnter={handleOwnerMouseEnter}
+              onMouseLeave={handleOwnerMouseLeave}
             >
-              <div className="relative overflow-hidden rounded-3xl bg-secondary/95 backdrop-blur-sm p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 text-left h-full">
-                {/* Background icon */}
-                <div className="absolute top-0 right-0 opacity-5 -mr-8 -mt-8">
-                  <Home className="h-40 w-40" />
-                </div>
+              <div className="relative overflow-hidden rounded-3xl h-full flex shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                {/* Left side - Dark background with text */}
+                <div className="flex-1 bg-secondary p-6 flex flex-col justify-between">
+                  <div>
+                    <div className="w-10 h-10 bg-accent/40 rounded-xl flex items-center justify-center mb-4">
+                      <Home className="h-5 w-5 text-accent" />
+                    </div>
 
-                <div className="relative z-10">
-                  <div className="w-14 h-14 bg-accent/30 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent/40 transition-colors">
-                    <Home className="h-7 w-7 text-accent" />
+                    <h2 className="text-xl font-bold text-secondary-foreground mb-2">
+                      Je suis
+                      <br />
+                      propriétaire
+                    </h2>
+
+                    <p className="text-secondary-foreground/80 text-sm mb-4">
+                      Confiez-nous votre bien, on s'occupe de tout.
+                    </p>
+
+                    <ul className="space-y-1.5 mb-5">
+                      <li className="flex items-center gap-2 text-secondary-foreground/90">
+                        <Home className="h-4 w-4 text-accent" />
+                        <span className="text-sm">Gestion complète A à Z</span>
+                      </li>
+                      <li className="flex items-center gap-2 text-secondary-foreground/90">
+                        <Home className="h-4 w-4 text-accent" />
+                        <span className="text-sm">Optimisation des revenus</span>
+                      </li>
+                      <li className="flex items-center gap-2 text-secondary-foreground/90">
+                        <Home className="h-4 w-4 text-accent" />
+                        <span className="text-sm">Accompagnement personnalisé</span>
+                      </li>
+                    </ul>
                   </div>
 
-                  <h2 className="text-2xl md:text-3xl font-bold text-secondary-foreground mb-4">
-                    Je suis propriétaire
-                  </h2>
-
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3 text-secondary-foreground/80">
-                      <span className="font-bold mt-1">✓</span>
-                      <span>Gestion complète A à Z</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-secondary-foreground/80">
-                      <span className="font-bold mt-1">✓</span>
-                      <span>Optimisation des revenus</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-secondary-foreground/80">
-                      <span className="font-bold mt-1">✓</span>
-                      <span>Accompagnement personnalisé</span>
-                    </li>
-                  </ul>
-
-                  <Button className="w-full bg-accent text-secondary hover:bg-accent/90 rounded-full py-2.5 font-semibold group-hover:shadow-lg transition-all">
+                  <Button className="w-full bg-accent text-secondary hover:bg-accent/90 rounded-full py-3 font-semibold group-hover:shadow-lg transition-all">
                     Confier mon bien
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
+
+                {/* Right side - Image carousel */}
+                <div className="w-1/3 relative overflow-hidden">
+                  <div
+                    className="h-full w-full bg-cover bg-center transition-all duration-700 ease-out"
+                    style={{
+                      backgroundImage: `url('${ownerImages[activeImageOwnerIdx]}')`,
+                    }}
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/10" />
+                </div>
               </div>
             </Link>
-          </div>
-        )}
+        </div>
       </div>
-      
     </section>
   )
 }

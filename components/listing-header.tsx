@@ -43,13 +43,13 @@ export function ListingHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-all duration-300",
+        "sticky top-0 z-[1000] transition-all duration-300",
         isScrolled
           ? "bg-background/95 backdrop-blur-md shadow-md"
           : "bg-background shadow-sm"
       )}
     >
-      <div className="w-full px-4 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-6">
           {/* Left: Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -64,7 +64,7 @@ export function ListingHeader() {
           </Link>
 
           {/* Center: Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-3xl items-center gap-3 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-border hover:shadow-lg transition-all">
+          <div className="hidden md:flex flex-1 max-w-2xl items-center gap-3 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-border hover:shadow-lg transition-all">
             <div className="flex-1 flex items-center gap-2">
               <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
               <Input

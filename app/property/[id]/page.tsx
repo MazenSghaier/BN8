@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, use } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Heart, Star, MapPin, Users, Bed, Bath, Wifi, Wind, UtensilsCrossed, Eye, Waves, Zap, Tv, Home as HomeIcon, Lock, ChevronLeft, ChevronRight, Share2, Flag, Phone } from "lucide-react"
+import { Heart, Star, MapPin, Users, Bed, Bath, Wifi, Wind, UtensilsCrossed, Eye, Waves, Zap, Tv, Home as HomeIcon, Lock, ChevronLeft, ChevronRight, Share2, Flag, Phone, Clock, Ban, PawPrint, Volume2, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ListingHeader } from "@/components/listing-header"
 import dynamic from "next/dynamic"
@@ -140,14 +140,14 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
 
   if (isExpanded) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+      <div className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm flex items-center justify-center">
         <button
           onClick={() => setIsExpanded(false)}
-          className="absolute top-6 left-6 z-50 text-white hover:bg-white/10 p-2 rounded-full transition-colors cursor-pointer"
+          className="absolute top-6 left-6 z-50 text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
         >
-          <ChevronLeft className="h-8 w-8" />
+          <X className="h-8 w-8" />
         </button>
-        <div className="relative w-[80%] h-[80%] flex items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center max-w-[90vw] mx-auto py-10">
           <Image
             src={images[currentIndex]}
             alt={title}
@@ -156,17 +156,17 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
           />
           <button
             onClick={goToPrevious}
-            className="absolute -left-16 z-50 text-white hover:bg-white/10 p-2 rounded-full cursor-pointer"
+            className="absolute left-0 text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
           >
-            <ChevronLeft className="h-8 w-8" />
+            <ChevronLeft className="h-10 w-10" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute -right-16 z-50 text-white hover:bg-white/10 p-2 rounded-full cursor-pointer"
+            className="absolute right-0 text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
           >
-            <ChevronRight className="h-8 w-8" />
+            <ChevronRight className="h-10 w-10" />
           </button>
-          <div className="absolute -bottom-10 text-white text-sm">
+          <div className="absolute bottom-6 text-white/70 text-sm font-medium">
             {currentIndex + 1} / {images.length}
           </div>
         </div>
@@ -186,20 +186,18 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
         <button
           onClick={(e) => {
             e.preventDefault()
-            e.stopPropagation()
             goToPrevious()
           }}
-          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all z-10"
+          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all"
         >
           <ChevronLeft className="h-5 w-5 text-secondary" />
         </button>
         <button
           onClick={(e) => {
             e.preventDefault()
-            e.stopPropagation()
             goToNext()
           }}
-          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all z-10"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 hover:bg-white transition-all"
         >
           <ChevronRight className="h-5 w-5 text-secondary" />
         </button>
@@ -231,8 +229,8 @@ function ImageGallery({ images, title }: { images: string[]; title: string }) {
   )
 }
 
-export default function PropertyDetailsPage({ params }: { params: { id: string } }) {
-  const { id } = params
+export default function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const property = properties[parseInt(id)]
   const [isFavorite, setIsFavorite] = useState(false)
   const [selectedDates, setSelectedDates] = useState({ arrival: "", departure: "" })
@@ -253,7 +251,7 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <ListingHeader />
 
       <div className="mx-auto max-w-7xl px-4 py-8">
@@ -341,7 +339,7 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
                 <p className="text-sm text-muted-foreground mb-4">
                   Situé dans un quartier calme et résidentiel, à 5 minutes de la plage et proche de toutes les commodités.
                 </p>
-                <div className="relative z-0 h-[400px] rounded-xl overflow-hidden bg-muted">
+                <div className="h-[400px] rounded-xl overflow-hidden bg-muted">
                   <PropertyMapDetail coordinates={property.mapCoordinates} title={property.title} />
                 </div>
                 <Link href="#" className="mt-4 font-semibold text-primary hover:underline inline-flex items-center gap-1">
@@ -381,50 +379,137 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
                 </Button>
               </div>
 
-              {/* Reviews */}
-              {property.reviews.length > 0 && (
-                <div>
-                  <h3 className="text-xl font-bold text-secondary mb-6">Ce que disent les voyageurs</h3>
-                  <div className="space-y-6">
-                    {property.reviews.map((review) => (
-                      <div key={review.id} className="border-b border-border pb-6 last:border-0">
-                        <div className="flex items-start gap-3 mb-3">
-                          <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted shrink-0">
-                            <Image
-                              src={review.avatar}
-                              alt={review.author}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-semibold text-secondary">{review.author}</p>
-                            <p className="text-xs text-muted-foreground">{review.country}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <div className="flex gap-0.5">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={cn(
-                                      "h-3 w-3",
-                                      i < review.rating ? "fill-primary text-primary" : "text-border"
-                                    )}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-xs text-muted-foreground">{review.date}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-muted-foreground">{review.text}</p>
-                      </div>
-                    ))}
+              {/* House Rules Section */}
+              <div className="mt-16 pt-12 border-t border-border">
+                <h2 className="text-2xl font-bold text-secondary mb-8">Règlement intérieur</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex items-start gap-4">
+                    <Clock className="h-6 w-6 text-primary shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-secondary mb-1">Heure d'arrivée</h3>
+                      <p className="text-sm text-muted-foreground">À partir de 14h00</p>
+                    </div>
                   </div>
-                  <Button variant="outline" className="mt-6 w-full rounded-lg">
-                    Voir tous les avis ({property.reviewCount})
-                  </Button>
+                  <div className="flex items-start gap-4">
+                    <Clock className="h-6 w-6 text-primary shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-secondary mb-1">Heure de départ</h3>
+                      <p className="text-sm text-muted-foreground">Avant 11h00</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Ban className="h-6 w-6 text-primary shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-secondary mb-1">Interdiction de fumer</h3>
+                      <p className="text-sm text-muted-foreground">Fumer est interdit dans le logement</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <PawPrint className="h-6 w-6 text-primary shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-secondary mb-1">Animaux de compagnie</h3>
+                      <p className="text-sm text-muted-foreground">Les animaux ne sont pas autorisés</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Volume2 className="h-6 w-6 text-primary shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-secondary mb-1">Pas de fêtes</h3>
+                      <p className="text-sm text-muted-foreground">Les événements sont interdits</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Users className="h-6 w-6 text-primary shrink-0 mt-1" />
+                    <div>
+                      <h3 className="font-semibold text-secondary mb-1">Respect du voisinage</h3>
+                      <p className="text-sm text-muted-foreground">Veuillez respecter le calme après 22h</p>
+                    </div>
+                  </div>
                 </div>
-              )}
+              </div>
+              {/* Reviews */}
+              <div className="mt-16 pt-12 border-t border-border">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-bold text-secondary">Ce que disent les voyageurs</h2>
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={cn(
+                            "h-5 w-5",
+                            i < Math.floor(property.rating) ? "fill-primary text-primary" : "text-border"
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-lg font-bold text-secondary">{property.rating}</span>
+                    <span className="text-sm text-muted-foreground">({property.reviewCount} avis)</span>
+                  </div>
+                </div>
+                
+                <div className="grid gap-6">
+                  {[
+                    {
+                      author: "Sophie",
+                      country: "France",
+                      avatar: "/images/host-1.jpg",
+                      rating: 5,
+                      date: "Il y a 2 semaines",
+                      text: "Un séjour parfait ! L'appartement est exceptionnel et absolument magnifique. Vraiment très propre et élégant. Merci beaucoup !"
+                    },
+                    {
+                      author: "Marc",
+                      country: "Belgique",
+                      avatar: "/images/host-1.jpg",
+                      rating: 5,
+                      date: "Il y a 1 mois",
+                      text: "Magnifique hôte très accueillant. Bien sûr très beau. Je recommande vivement !"
+                    },
+                    {
+                      author: "Lina",
+                      country: "Allemagne",
+                      avatar: "/images/host-1.jpg",
+                      rating: 5,
+                      date: "Il y a 2 mois",
+                      text: "Tout était parfait ! Merci de nous avoir accueilli. Le chaleureux et très bonne chaleureaux et les petites attentions."
+                    }
+                  ].map((review, index) => (
+                    <div key={index} className="flex gap-4 pb-6 border-b border-border last:border-b-0">
+                      <img
+                        src={review.avatar}
+                        alt={review.author}
+                        className="h-12 w-12 rounded-full object-cover"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h3 className="font-semibold text-secondary">{review.author}</h3>
+                            <p className="text-sm text-muted-foreground">{review.country}</p>
+                          </div>
+                          <span className="text-xs text-muted-foreground">{review.date}</span>
+                        </div>
+                        <div className="flex gap-1 mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={cn(
+                                "h-4 w-4",
+                                i < review.rating ? "fill-primary text-primary" : "text-border"
+                              )}
+                            />
+                          ))}
+                        </div>
+                        <p className="text-sm text-muted-foreground">{review.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Button variant="outline" className="mt-8 w-full rounded-lg border-border">
+                  Voir tous les avis ({property.reviewCount})
+                </Button>
+              </div>
             </div>
           </div>
 
